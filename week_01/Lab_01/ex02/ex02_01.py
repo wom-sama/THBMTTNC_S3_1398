@@ -1,0 +1,5 @@
+ten = input("nhap ten cua: ")
+tuoi = input("nhap tuoi cua ban: ")
+mssv = input("Nhap ma so sinh vien: ")
+lop =  input("Nhap lop:")
+print("Chao mung,",ten,"! Ban ",tuoi," tuoi, ma so sinh vien cua ban la",mssv," Lop cua ban la:", lop)
