@@ -3,7 +3,7 @@ from caesar import CaesarCipher
 from vigenere import VigenereCipher
 from railfence import RailFenceCipher
 from playfair import PlayFairCipher
-# from cipher.Transposition import TranspositionCipher
+from Transpostsition import TranspositionCipher
 app = Flask(__name__) 
 #Caesar
 caesar_cipher = CaesarCipher()
@@ -120,22 +120,33 @@ def playfair_decrypt():
 
 
 #Transposition
-# transposition_cipher = TranspositionCipher()
+transposition_cipher = TranspositionCipher()
 
-# @app.route('/api/transposition/encrypt', methods=['POST'])
-# def transposition_encrypt():
-#     data = request.get_json()
-#     plain_text = data.get('plain_text')
-#     key = int(data.get('key'))
-#     encrypted_text = transposition_cipher.encrypt(plain_text, key)
-#     return jsonify({'encrypted_text': encrypted_text})
+@app.route('/api/transposition/encrypt', methods=['POST'])
+def transposition_encrypt():
+    data = request.get_json()
+    if not data or 'plain_text' not in data or 'key' not in data:
+        return jsonify({'error': 'Yêu cầu thiếu "plain_text" hoặc "key"'}), 400
+    plain_text = data.get('plain_text')
+    try:
+        key = int(data.get('key'))
+        encrypted_text = transposition_cipher.encrypt(plain_text, key)
+        return jsonify({'encrypted_text': encrypted_text})
+    except (ValueError, TypeError):
+        return jsonify({'error': '"key" phải là một số nguyên'}), 400
 
-# @app.route('/api/transposition/decrypt', methods=['POST'])
-# def transposition_decrypt():
-#     data = request.get_json()
-#     cipher_text = data.get('cipher_text')
-#     key = int(data.get('key'))
-#     decrypted_text = transposition_cipher.decrypt(cipher_text, key)
-#     return jsonify({'decrypted_text': decrypted_text})
+@app.route('/api/transposition/decrypt', methods=['POST'])
+def transposition_decrypt():
+    data = request.get_json()
+    if not data or 'cipher_text' not in data or 'key' not in data:
+        return jsonify({'error': 'Yêu cầu thiếu "cipher_text" hoặc "key"'}), 400
+    cipher_text = data.get('cipher_text')
+    try:
+        key = int(data.get('key'))
+        decrypted_text = transposition_cipher.decrypt(cipher_text, key)
+        return jsonify({'decrypted_text': decrypted_text})
+    except (ValueError, TypeError):
+        return jsonify({'error': '"key" phải là một số nguyên'}), 400
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5000,debug=True)
