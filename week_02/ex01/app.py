@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from caesar import CaesarCipher
 from railfence import RailFenceCipher
 from playfair import PlayFairCipher
+from vigenere import VigenereCipher
 app = Flask(__name__)
 
 # --------------------- MAIN ROUTE ---------------------
@@ -82,6 +83,26 @@ def railfence_decrypt():
     decrypted_text = railfence.rail_fence_decrypt(text, key)
     return render_template('railfence.html',Ikey_result=key,Icipher_result=text,Oplain_result=decrypted_text)
 
+# --------------------- ROUTES VIGENERE---------------------
+@app.route("/vigenere")
+def vigenere():
+    return render_template('vigenere.html')
+
+@app.route("/vigenere/encrypt", methods=['POST'])
+def vigenere_encrypt():
+    text = request.form['inputPlainText']
+    key = int(request.form['inputKeyPlain'])
+    vigenere = VigenereCipher()
+    encrypted_text = vigenere.encrypt_text(text,key)
+    return render_template('vigenere.html',plain_result=text,key_result=key,cipher_result=encrypted_text)
+
+@app.route("/vigenere/decrypt", methods=['POST'])
+def vigenere_decrypt():
+    text = request.form['inputCipherText']
+    key = int(request.form['inputKeyCipher'])
+    vigenere = VigenereCipher()
+    decrypted_text = vigenere.decrypt_text(text,key)
+    return render_template('vigenere.html',Ikey_result=key,Icipher_result=text,Oplain_result=decrypted_text)
 # --------------------- MAIN FUNCTION ---------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050, debug=True)
