@@ -49,7 +49,7 @@ def playfair_encrypt():
     playfair_cipher = PlayFairCipher()
     playfair_matrix = playfair_cipher.create_playfair_matrix(key)
     encrypted_text = playfair_cipher.playfair_encrypt(text, playfair_matrix)
-    return f"text: {text}<br>/key: {key}<br>/encrypted text: {encrypted_text}"
+    return render_template('playfair.html',plain_result=text,key_result=key,cipher_result=encrypted_text)
 
 @app.route("/playfair/decrypt", methods=['POST'])
 def playfair_decrypt():
@@ -58,7 +58,7 @@ def playfair_decrypt():
     playfair_cipher = PlayFairCipher()
     playfair_matrix = playfair_cipher.create_playfair_matrix(key)
     decrypted_text = playfair_cipher.playfair_decrypt(text, playfair_matrix)
-    return f"text: {text}<br>/key: {key}<br>/decrypted text: {decrypted_text}"
+    return render_template('playfair.html',Ikey_result=key,Icipher_result=text,Oplain_result=decrypted_text,)
 
 
 # --------------------- ROUTES RAILFENCE ---------------------
