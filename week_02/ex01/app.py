@@ -58,7 +58,7 @@ def playfair_decrypt():
     playfair_cipher = PlayFairCipher()
     playfair_matrix = playfair_cipher.create_playfair_matrix(key)
     decrypted_text = playfair_cipher.playfair_decrypt(text, playfair_matrix)
-    return render_template('playfair.html',Ikey_result=key,Icipher_result=text,Oplain_result=decrypted_text,)
+    return render_template('playfair.html',Ikey_result=key,Icipher_result=text,Oplain_result=decrypted_text)
 
 
 # --------------------- ROUTES RAILFENCE ---------------------
@@ -72,7 +72,7 @@ def railfence_encrypt():
     key = int(request.form['inputKeyPlain'])
     railfence = RailFenceCipher()
     encrypted_text = railfence.rail_fence_encrypt(text, key)
-    return f"text: {text}<br>/key: {key}<br>/encrypted text: {encrypted_text}"
+    return render_template('railfence.html',plain_result=text,key_result=key,cipher_result=encrypted_text)
 
 @app.route("/railfence/decrypt", methods=['POST'])
 def railfence_decrypt():
@@ -80,7 +80,7 @@ def railfence_decrypt():
     key = int(request.form['inputKeyCipher'])
     railfence = RailFenceCipher()
     decrypted_text = railfence.rail_fence_decrypt(text, key)
-    return f"text: {text}<br>/key: {key}<br>/decrypted text: {decrypted_text}"
+    return render_template('railfence.html',Ikey_result=key,Icipher_result=text,Oplain_result=decrypted_text)
 
 # --------------------- MAIN FUNCTION ---------------------
 if __name__ == "__main__":
