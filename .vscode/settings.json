@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "railfence"
+    ],
+    "python.analysis.extraPaths": [
+        "./Week_03"
     ]
 }
