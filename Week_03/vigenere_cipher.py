@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
-from ui.caesar import Ui_MainWindow
+from ui.vigenere import Ui_MainWindow
 import requests
 
 class MyApp(QMainWindow):
@@ -12,15 +12,23 @@ class MyApp(QMainWindow):
         self.ui.btn_decrypt.clicked.connect(self.call_api_decrypt)
 
     def call_api_encrypt(self):
-        url = "http://127.0.0.1:5000/api/caesar/encrypt"
+        url = "http://127.0.0.1:5000/api/vigenere/encrypt"
+        
+        try:
+            key_value = self.ui.txt_key.toPlainText().strip()
+        except ValueError:
+            QMessageBox.critical(self, "Error", "Key is required!")
+            return
+
         payload = {
-            "plain_text": self.ui.txt_plain_text.toPlainText(),
-            "key": self.ui.txt_key.toPlainText()
+            "plain_text": self.ui.txt_plain_text.toPlainText().strip(),
+            "key": key_value
         }
+        
         try:
             response = requests.post(url, json=payload)
             print("Response status code:", response.status_code)
-            print("Response text:", response.text)  
+            print("Response text:", response.text)
 
             if response.status_code == 200:
                 try:
@@ -31,23 +39,32 @@ class MyApp(QMainWindow):
                     msg.setText("Encrypted Successfully")
                     msg.exec_()
                 except requests.exceptions.JSONDecodeError as e:
-                    print(f"JSON Decode Error: {e}")
+                    QMessageBox.critical(self, "Error", f"JSON Decode Error: {e}")
             else:
-                print("Error while calling API")
+                QMessageBox.warning(self, "API Error", f"Error: {response.text}")
 
         except requests.exceptions.RequestException as e:
-            print(f"Error while calling API: {e}")
+            QMessageBox.critical(self, "Connection Error", f"Cannot connect to API:\n{e}")
+
 
     def call_api_decrypt(self):
-        url = "http://127.0.0.1:5000/api/caesar/decrypt"
+        url = "http://127.0.0.1:5000/api/vigenere/decrypt"
+        
+        try:
+            key_value = self.ui.txt_key.toPlainText().strip()
+        except ValueError:
+            QMessageBox.critical(self, "Error", "Key is required!")
+            return
+
         payload = {
-            "cipher_text": self.ui.txt_cipher_text.toPlainText(),
-            "key": self.ui.txt_key.toPlainText()
+            "cipher_text": self.ui.txt_cipher_text.toPlainText().strip(),
+            "key": key_value
         }
+        
         try:
             response = requests.post(url, json=payload)
             print("Response status code:", response.status_code)
-            print("Response text:", response.text)  
+            print("Response text:", response.text)
 
             if response.status_code == 200:
                 try:
@@ -58,12 +75,12 @@ class MyApp(QMainWindow):
                     msg.setText("Decrypted Successfully")
                     msg.exec_()
                 except requests.exceptions.JSONDecodeError as e:
-                    print(f"JSON Decode Error: {e}")
+                    QMessageBox.critical(self, "Error", f"JSON Decode Error: {e}")
             else:
-                print("Error while calling API")
+                QMessageBox.warning(self, "API Error", f"Error: {response.text}")
 
         except requests.exceptions.RequestException as e:
-            print(f"Error while calling API: {e}")
+            QMessageBox.critical(self, "Connection Error", f"Cannot connect to API:\n{e}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
